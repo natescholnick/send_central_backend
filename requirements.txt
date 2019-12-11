@@ -1,4 +1,5 @@
 alembic==1.2.1
+blinker==1.4
 cffi==1.13.2
 Click==7.0
 cryptography==2.8
@@ -7,12 +8,14 @@ Flask==1.1.1
 Flask-Bootstrap4==4.0.2
 Flask-Cors==3.0.8
 Flask-Login==0.4.1
+Flask-Mail==0.9.1
 Flask-Migrate==2.5.2
 Flask-SQLAlchemy==2.4.1
 Flask-WTF==0.14.2
 gunicorn==19.9.0
 itsdangerous==1.1.0
 Jinja2==2.10.3
+jwt==0.6.1
 Mako==1.1.0
 MarkupSafe==1.1.1
 psycopg2==2.8.4
