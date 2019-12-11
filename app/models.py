@@ -25,9 +25,13 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def get_token(self, expires_in='5m'):
+    seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
+    def convert_to_seconds(s):
+        return int(s[:-1]) * seconds_per_unit[s[-1]]
+
+    def get_token(self, expires_in='10m'):
         return jwt.encode(
-            { 'user_id': self.id, 'exp': time() + expires_in },
+            { 'user_id': self.id, 'exp': time() + convert_to_seconds(expires_in) },
             app.config['SECRET_KEY'],
             algorithm='HS256'
         ).decode('utf-8')
@@ -43,6 +47,9 @@ class User(db.Model, UserMixin):
         except:
             return
         return User.query.get(id)
+
+    def __repr__(self):
+        return f'<User {self.id}: {self.email}>'
 
 
 
@@ -72,7 +79,7 @@ class Climb(db.Model):
     user_id = db.Column(db.Integer)
     climb_img_url = db.Column(db.String(250), default='http://placehold.it/250x250')
 
-    
+
 
 @login.user_loader
 def load_user(id):

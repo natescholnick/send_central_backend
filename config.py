@@ -1,29 +1,19 @@
 import os
+
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    DEBUG = False
-    TESTING = False
-    CSRF_ENABLED = True
+    DEBUG = True
     SECRET_KEY = 'this-is-a-secret'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:Moxysuq0@localhost:5432/sendcentral'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'app.db')
 
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:pass@localhost:5432/sendcentral'
 
-class ProductionConfig(Config):
-    DEBUG = False
-
-
-class StagingConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
-
-
-class DevelopmentConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
-
-
-class TestingConfig(Config):
-    TESTING = True
+    MAIL_PASSWORD = 'suldjynyahuyidur'
+    MAIL_USERNAME = 'sendcentralteam@gmail.com'
+    MAIL_SERVER = 'smtp.googlemail.com'
+    MAIL_USE_TLS = 1
+    MAIL_PORT = 587
+    ADMINS = ['sendcentralteam@gmail.com']
