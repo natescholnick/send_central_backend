@@ -100,7 +100,3 @@ class Send(db.Model):
     time_created = db.Column(db.Time)
     media_url = db.Column(db.String(256))
 
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))

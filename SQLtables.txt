@@ -6,6 +6,8 @@ CREATE TABLE public.training(
     date_created DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (user_id) REFERENCES public.user(id)
 );
+
+
 CREATE TABLE public.send(
     id SERIAL PRIMARY KEY,
     climb_id INTEGER NOT NULL,
@@ -17,3 +19,137 @@ CREATE TABLE public.send(
     FOREIGN KEY (climb_id) REFERENCES public.climb(id),
     FOREIGN KEY (training_id) REFERENCES public.training(id)
     );
+
+////////////////////////////
+AS COPIED FROM LOCAL SCRIPTS:
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+CREATE TABLE public.gym
+(
+   id SERIAL PRIMARY KEY,
+    full_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    display_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    city character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    country character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    phone character varying(15) COLLATE pg_catalog."default" NOT NULL,
+    external_url character varying(150) COLLATE pg_catalog."default",
+    email character varying(120) COLLATE pg_catalog."default" NOT NULL,
+    gym_img_url character varying(250) COLLATE pg_catalog."default",
+    date_created timestamp without time zone NOT NULL DEFAULT now(),
+    description text COLLATE pg_catalog."default"
+)
+TABLESPACE pg_default;
+
+
+CREATE TABLE public.user
+(
+    id SERIAL PRIMARY KEY,
+    first_name character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    last_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    display_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    birthdate date NOT NULL,
+    email character varying(120) COLLATE pg_catalog."default" NOT NULL,
+    prof_img_url character varying(250) COLLATE pg_catalog."default",
+    password_hash character varying(256) COLLATE pg_catalog."default" NOT NULL,
+    date_created timestamp without time zone NOT NULL DEFAULT now(),
+    bio text COLLATE pg_catalog."default",
+    last_logged_in timestamp
+)
+TABLESPACE pg_default;
+
+
+CREATE TABLE public.climb
+(
+    id SERIAL PRIMARY KEY,
+    gym_id integer NOT NULL,
+    climb_name character varying(100) COLLATE pg_catalog."default",
+    climb_type character varying(15) COLLATE pg_catalog."default" NOT NULL,
+    grade character varying(8) COLLATE pg_catalog."default" NOT NULL,
+    color character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    station character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    date_set date DEFAULT now(),
+    date_stripped date,
+    setter character varying(30) COLLATE pg_catalog."default",
+    user_id integer,
+    climb_img_url character varying(250) COLLATE pg_catalog."default",
+    CONSTRAINT climb_gym_id_fkey FOREIGN KEY (gym_id)
+        REFERENCES public.gym (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT climb_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.user (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+TABLESPACE pg_default;
+
+
+CREATE TABLE public.climb_rating
+(
+    id SERIAL PRIMARY KEY,
+    user_id integer NOT NULL,
+    climb_id integer NOT NULL,
+    rating smallint NOT NULL,
+    CONSTRAINT climb_rating_climb_id_fkey FOREIGN KEY (climb_id)
+        REFERENCES public.climb (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT climb_rating_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public."user" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+TABLESPACE pg_default;
+
+
+CREATE TABLE public.gym_rating
+(
+    id SERIAL PRIMARY KEY,
+    user_id integer NOT NULL,
+    gym_id integer NOT NULL,
+    rating smallint NOT NULL,
+    CONSTRAINT gym_rating_gym_id_fkey FOREIGN KEY (gym_id)
+        REFERENCES public.gym (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT gym_rating_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public."user" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+TABLESPACE pg_default;
+
+
+CREATE TABLE public.is_admin
+(
+    id SERIAL PRIMARY KEY,
+    user_id integer NOT NULL,
+    gym_id integer NOT NULL,
+    CONSTRAINT is_admin_gym_id_fkey FOREIGN KEY (gym_id)
+        REFERENCES public.gym (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT is_admin_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public."user" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+TABLESPACE pg_default;
+
+
+CREATE TABLE public.user_gym
+(
+    id SERIAL PRIMARY KEY,
+    user_id integer NOT NULL,
+    gym_id integer NOT NULL,
+    CONSTRAINT usergym_gym_id_fkey FOREIGN KEY (gym_id)
+        REFERENCES public.gym (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT usergym_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public."user" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+TABLESPACE pg_default;

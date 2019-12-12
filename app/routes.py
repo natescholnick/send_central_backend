@@ -273,7 +273,7 @@ def sendRegistration():
         return jsonify({ 'code': 200, 'message': 'Registration email sent successfully. Follow the link in the email within 10 minutes to complete registration.'})
 
     except:
-        return jsonify({'code': 400, 'message': 'Something went wrong'})
+        return jsonify({'code': 400, 'message': 'Something went wrong.'})
 
 
 @app.route('/api/mail/reset_password', methods=['GET'])
@@ -301,13 +301,43 @@ def sendPasswordReset():
             return jsonify({ 'code': 200, 'message': 'Registration email sent successfully. Follow the link in the email within 10 minutes to complete registration.'})
 
     except:
-        return jsonify({'code': 400, 'message': 'Something went wrong'})
+        return jsonify({'code': 400, 'message': 'Something went wrong.'})
 
 
 ####################
 ### TRAINING API ###
 ####################
 
-@app.route('/api/training/save_log', methods=['POST'])
+@app.route('/api/training/save_log', methods=['GET', 'POST'])
 def saveTraining():
+    try:
+        user = verify_token(request.headers.get('token'))
+        if user is None:
+            return jsonify({'code': 401, 'message': 'Training can only be saved while logged in.'})
+
+        training = Training(
+            notes = request.headers.get('notes'),
+            is_public = request.headers.get('is_public'),
+            date_created = datetime.date.today()
+        )
+        db.session.add(training)
+        db.session.flush()
+
+        for climb in request.headers.get('climbs'):
+            send = Send(
+                climb_id = climb['climb_id'],
+                training_id = training.id,
+                send_category = climb['send_category'],
+                notes = climb['notes'],
+                time_created = climb['time_created'],
+                # TODO media url
+            )
+            db.session.add(send)
+
+        db.session.commit()
+
+        return jsonify({'code': 200, 'message': 'Your training log has been saved successfully.'})
+
+    except:
+        return jsonify({'code': 400, 'message': 'Something went wrong.'})
     
