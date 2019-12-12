@@ -1,0 +1,18 @@
+CREATE TABLE public.training(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    notes VARCHAR(300) NOT NULL,
+    date_created DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY (user_id) REFERENCES public.user(id)
+);
+CREATE TABLE public.send(
+    id SERIAL PRIMARY KEY,
+    climb_id INTEGER NOT NULL,
+    training_id INTEGER NOT NULL,
+    send_category VARCHAR(15) NOT NULL,
+    notes VARCHAR(150),
+    time_created TIME DEFAULT CURRENT_TIME,
+    media_url VARCHAR(256),
+    FOREIGN KEY (climb_id) REFERENCES public.climb(id),
+    FOREIGN KEY (training_id) REFERENCES public.training(id)
+    );
