@@ -4,7 +4,7 @@ We're excited to see you join.
 
 To complete your registration click the link below.
 
-send-central-backend.herokuapp.com/api/account//api/account/register?token={{token}}
+send-central-backend.herokuapp.com/api/account/register?token={{token}}
 
 If this email has found you erroneously, our apologies. You may simply ignore it.
 

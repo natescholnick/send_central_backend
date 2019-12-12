@@ -84,13 +84,11 @@ def login():
 def register():
   try:
     token = request.args.get('token')
-    print(token)
     data = jwt.decode(
       token,
       app.config['SECRET_KEY'],
       algorithm=['HS256']
     )
-    print(data)
 
     birthdate_str = data['birthdate']
     birthdate_obj = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
