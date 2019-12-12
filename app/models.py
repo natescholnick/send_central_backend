@@ -80,6 +80,22 @@ class Climb(db.Model):
     climb_img_url = db.Column(db.String(250), default='http://placehold.it/250x250')
 
 
+class Training(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    notes = db.Column(db.String(300))
+    date_created = db.Column(db.Date)
+
+
+class Send(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    climb_id = db.Column(db.Integer)
+    training_id = db.Column(db.Integer)
+    send_category = db.Column(db.String(15))
+    notes = db.Column(db.String(150))
+    time_created = db.Column(db.Time)
+    media_url = db.Column(db.String(256))
+
 
 @login.user_loader
 def load_user(id):
