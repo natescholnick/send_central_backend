@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 import jwt
 from datetime import datetime
 import time
-from app.models import User, Gym, Climb
+from app.models import User, Gym, Climb, Training, Send
 from app.email import registrationMail, resetPasswordMail
 
 
@@ -147,6 +147,7 @@ def create_climb():
             date_set_obj = datetime.strptime(date_set_str, '%Y-%m-%d').date()
 
             climb = Climb(
+                gym_id = element['gym_id'],
                 climb_name = element['climb_name'],
                 climb_type = element['climb_type'],
                 grade = element['grade'],
@@ -169,11 +170,39 @@ def create_climb():
         return jsonify({ 'code' : 400, 'message' : 'Something went wrong.'})
 
 
+@app.route('/api/climb/get_climbs', methods=['GET'])
+def get_gyms():
+    try:
+        climbs = Climb.query.filter_by(gym_id = request.args.get('gym_id'), date_stripped=None)
+        climb_dicts = []
+
+        for climb in climbs:
+            climb_dict = {
+                'id': climb.id,
+                'climb_name': climb.climb_name,
+                'climb_type': climb.climb_type,
+                'grade': climb.grade,
+                'color': climb.color,
+                'station': climb.station,
+                'date_set': climb.date_set,
+                'setter': climb.setter,
+                'user_id': climb.user_id,
+                'climb_img_url': climb.climb_img_url
+                # TODO: Add query for climb rating! Also make view in SQL!
+            }
+            climb_dicts.append(climb_dict)
+
+        return jsonify({'code': 200, 'message': 'Query successful', 'climb': climb_dicts})
+
+    except:
+        return jsonify({'code': 400, 'message': 'Something went wrong.'})
+
+
 ###############
 ### GYM API ###
 ###############
 
-@app.route('/api/climb/create', methods=['POST'])
+@app.route('/api/gym/create', methods=['POST'])
 def create_gym():
     try:
 
@@ -196,6 +225,35 @@ def create_gym():
     except:
         return jsonify({ 'code' : 400, 'message' : 'Something went wrong.'})
 
+
+@app.route('/api/gym/get_gyms', methods=['GET'])
+def get_gyms():
+    try:
+        gyms = Gym.query.all()
+        gym_dicts = []
+
+        for gym in gyms:
+            gym_dict = {
+                'id': gym.id,
+                'full_name': gym.full_name,
+                'display_name': gym.display_name,
+                'address': gym.address,
+                'city': gym.city,
+                'country': gym.country,
+                'email': gym.email,
+                'phone': gym.phone,
+                'external_url': gym.external_url,
+                'gym_img_url': gym.gym_img_url,
+                'date_created': gym.date_created,
+                'description': gym.description
+                # TODO: Add query for gym rating! Also make view in SQL!
+            }
+            gym_dicts.append(gym_dict)
+
+        return jsonify({'code': 200, 'message': 'Query successful', 'gyms': gym_dicts})
+
+    except:
+        return jsonify({'code': 400, 'message': 'Something went wrong.'})
 
 ################
 ### MAIL API ###
@@ -244,3 +302,12 @@ def sendPasswordReset():
 
     except:
         return jsonify({'code': 400, 'message': 'Something went wrong'})
+
+
+####################
+### TRAINING API ###
+####################
+
+@app.route('/api/training/save_log', methods=['POST'])
+def saveTraining():
+    

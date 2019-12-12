@@ -58,6 +58,8 @@ class Gym(db.Model):
     full_name = db.Column(db.String(100))
     display_name = db.Column(db.String(50), unique=True, index=True)
     address = db.Column(db.String(100))
+    city = db.Column(db.String(30))
+    country = db.Column(db.String(30))
     email = db.Column(db.String(120), unique=True, index=True)
     phone = db.Column(db.String(15))
     external_url = db.Column(db.String(150))
@@ -68,6 +70,7 @@ class Gym(db.Model):
 
 class Climb(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    gym_id = db.Column(db.Integer)
     climb_name = db.Column(db.String(100))
     climb_type = db.Column(db.String(15))
     grade = db.Column(db.String(8))
@@ -84,6 +87,7 @@ class Training(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
     notes = db.Column(db.String(300))
+    is_public = db.Column(db.Boolean)
     date_created = db.Column(db.Date)
 
 

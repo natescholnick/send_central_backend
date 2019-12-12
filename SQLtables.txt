@@ -2,6 +2,7 @@ CREATE TABLE public.training(
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     notes VARCHAR(300) NOT NULL,
+    is_public BOOLEAN NOT NULL DEFAULT TRUE,
     date_created DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (user_id) REFERENCES public.user(id)
 );
