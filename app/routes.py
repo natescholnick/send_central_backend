@@ -171,7 +171,7 @@ def create_climb():
 
 
 @app.route('/api/climb/get_climbs', methods=['GET'])
-def get_gyms():
+def get_climbs():
     try:
         climbs = Climb.query.filter_by(gym_id = request.args.get('gym_id'), date_stripped=None)
         climb_dicts = []
