@@ -5,6 +5,10 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 
+seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
+def convert_to_seconds(s):
+    return int(s[:-1]) * seconds_per_unit[s[-1]]
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30))
@@ -24,10 +28,6 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
-    def convert_to_seconds(s):
-        return int(s[:-1]) * seconds_per_unit[s[-1]]
 
     def get_token(self, expires_in='10m'):
         return jwt.encode(

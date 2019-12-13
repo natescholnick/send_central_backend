@@ -58,7 +58,7 @@ def delete_account():
 
 @app.route('/api/account/login', methods=['GET', 'POST'])
 def login():
-  # try:
+  try:
     token = request.headers.get('token')
     data = jwt.decode(
       token,
@@ -76,7 +76,7 @@ def login():
 
     return jsonify({ 'code' : 200, 'message' : 'Login successful.', 'token': user.get_token(expires_in='52w')})
 
-  # except:
+  except:
     return jsonify({ 'code' : 400, 'message' : 'Something went wrong.'})
 
 
