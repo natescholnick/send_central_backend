@@ -34,6 +34,7 @@ def change_password():
 
         else:
             user.set_password(data['new_password'])
+            db.session.commit()
             return jsonify({ 'code' : 200, 'message' : 'Password changed successfully.'})
 
     except:
