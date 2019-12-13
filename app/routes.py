@@ -29,12 +29,8 @@ def change_password():
 
         user = User.query.get(data['user_id'])
 
-        if data['forgot_password'] == True:
-            user.set_password(data['new_password'])
-            return jsonify({ 'code' : 200, 'message' : 'Password changed successfully.'})
-
-        elif not user.check_password(data['password']):
-            return jsonify({ 'code' : 401, 'message' : 'Incorrect password.' })
+        if not user or not user.check_password(data['password']):
+            return jsonify({ 'code' : 401, 'message' : 'Invalid credentials.' })
 
         else:
             user.set_password(data['new_password'])
