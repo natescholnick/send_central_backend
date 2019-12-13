@@ -29,7 +29,11 @@ def change_password():
 
         user = User.query.get(data['user_id'])
 
-        if not user.check_password(data['password']):
+        if data['forgot_password'] == True:
+            user.set_password(data['new_password'])
+            return jsonify({ 'code' : 200, 'message' : 'Password changed successfully.'})
+
+        elif not user.check_password(data['password']):
             return jsonify({ 'code' : 401, 'message' : 'Incorrect password.' })
 
         else:
@@ -109,26 +113,6 @@ def register():
 
   except:
     return jsonify({ 'code' : 400, 'message' : 'Something went wrong.'})
-
-
-@app.route('/api/account/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    try:
-        token = request.headers.get('token')
-        data = jwt.decode(
-            token,
-            app.config['SECRET_KEY'],
-            algorithm=['HS256']
-        )
-
-        user = User.query.get(data['user_id'])
-
-        if data['forgot_password'] == True:
-            user.set_password(data['new_password'])
-            return jsonify({ 'code' : 200, 'message' : 'Password changed successfully.'})
-
-    except:
-        return jsonify({'code': 400, 'message': 'Something went wrong.'})
 
 
 #################
@@ -296,7 +280,7 @@ def sendPasswordReset():
                 algorithm='HS256'
             ).decode('utf-8')
             resetPasswordMail(token_out, data['email'])
-            return jsonify({ 'code': 200, 'message': 'Registration email sent successfully. Follow the link in the email within 10 minutes to complete registration.'})
+            return jsonify({ 'code': 200, 'message': 'Password reset email sent successfully. Follow the link in the email within 10 minutes to reset your password.'})
 
     except:
         return jsonify({'code': 400, 'message': 'Something went wrong.'})
