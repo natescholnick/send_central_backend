@@ -189,6 +189,8 @@ def create_gym():
             full_name = request.headers.get('full_name'),
             display_name = request.headers.get('display_name'),
             address = request.headers.get('address'),
+            city = request.headers.get('city'),
+            country = request.headers.get('country'),
             email = request.headers.get('email'),
             phone = request.headers.get('phone'),
             external_url = request.headers.get('external_url'),
