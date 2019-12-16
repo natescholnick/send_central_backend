@@ -153,7 +153,7 @@ def create_climbs():
 @app.route('/api/climb/get_climbs', methods=['GET'])
 def get_climbs():
     try:
-        climbs = Climb.query.filter_by(id=request.args.get('gym_id'), date_stripped=None)
+        climbs = Climb.query.all()
         climb_dicts = []
 
         for climb in climbs:
@@ -167,8 +167,7 @@ def get_climbs():
                 'date_set': climb.date_set,
                 'setter': climb.setter,
                 'user_id': climb.user_id,
-                'climb_img_url': climb.climb_img_url,
-                'How many climbs?': len(climbs)
+                'climb_img_url': climb.climb_img_url
                 # TODO: Add query for climb rating! Also make view in SQL!
             }
             climb_dicts.append(climb_dict)
@@ -186,7 +185,6 @@ def get_climbs():
 @app.route('/api/gym/create', methods=['POST'])
 def create_gym():
     try:
-
         gym = Gym(
             full_name = request.headers.get('full_name'),
             display_name = request.headers.get('display_name'),
