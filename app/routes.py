@@ -117,9 +117,10 @@ def register():
 #################
 
 @app.route('/api/climb/create', methods=['POST'])
-def create_climb():
-    try:
+def create_climbs():
+    # try:
         climbs_list = request.headers.get('climbs_list')
+        print(climbs_list[0:10])
         to_commit = []
         for element in climbs_list:
             date_set_str = element['date_set']
@@ -145,7 +146,7 @@ def create_climb():
 
         return jsonify({'code' : 201, 'message' : 'Climb(s) created successfully.'})
 
-    except:
+    # except:
         return jsonify({ 'code' : 400, 'message' : 'Something went wrong.'})
 
 
