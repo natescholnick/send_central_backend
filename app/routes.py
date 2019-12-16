@@ -153,7 +153,7 @@ def create_climbs():
 @app.route('/api/climb/get_climbs', methods=['GET'])
 def get_climbs():
     try:
-        climbs = Climb.query.filter_by(gym_id = request.args.get('gym_id'), date_stripped=None)
+        climbs = Climb.query.filter_by(id=request.args.get('gym_id'), date_stripped=None)
         climb_dicts = []
 
         for climb in climbs:
@@ -172,7 +172,7 @@ def get_climbs():
             }
             climb_dicts.append(climb_dict)
 
-        return jsonify({'code': 200, 'message': 'Query successful', 'climb': climb_dicts})
+        return jsonify({'code': 200, 'message': 'Query successful', 'climbs': climb_dicts})
 
     except:
         return jsonify({'code': 400, 'message': 'Something went wrong.'})
