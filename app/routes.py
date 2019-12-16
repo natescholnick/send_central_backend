@@ -167,7 +167,8 @@ def get_climbs():
                 'date_set': climb.date_set,
                 'setter': climb.setter,
                 'user_id': climb.user_id,
-                'climb_img_url': climb.climb_img_url
+                'climb_img_url': climb.climb_img_url,
+                'How many climbs?': len(climbs)
                 # TODO: Add query for climb rating! Also make view in SQL!
             }
             climb_dicts.append(climb_dict)
